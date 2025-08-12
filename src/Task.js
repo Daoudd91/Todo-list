@@ -1,17 +1,23 @@
 import Priority from "./Priority";
 export class Task {
+  #id;
   #title;
   #description;
   #priority;
   #dueDate;
-  #isCompleted;
+  #isDone;
 
-  constructor(title, description, priority, dueDate, isCompleted) {
-    this.title = title;
-    this.description = description;
-    this.priority = priority;
-    this.dueDate = dueDate;
-    this.isCompleted = isCompleted;
+  constructor(title, description, priority, dueDate, isDone) {
+    this.#id = crypto.randomUUID();
+    this.#title = title;
+    this.#description = description;
+    this.#priority = priority;
+    this.#dueDate = dueDate;
+    this.#isDone = isDone;
+  }
+
+  get id() {
+    return this.#id;
   }
 
   get title() {
@@ -46,11 +52,22 @@ export class Task {
     this.#dueDate = dueDate;
   }
 
-  get isCompleted() {
-    return this.#isCompleted;
+  get isDone() {
+    return this.#isDone;
   }
 
-  set isCompleted(isCompleted) {
-    this.#isCompleted = isCompleted;
+  set isDone(isDone) {
+    this.#isDone = isDone;
+  }
+
+  toJSON() {
+    return {
+      id: this.#id,
+      title: this.#title,
+      description: this.#description,
+      priority: this.#priority,
+      dueDate: this.#dueDate,
+      isDone: this.#isDone,
+    };
   }
 }

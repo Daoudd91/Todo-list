@@ -42,6 +42,7 @@
     "css-select": "^4.3.0",
     "css-what": "^6.2.2",
     "cssesc": "^3.0.0",
+    "date-fns": "^4.1.0",
     "debug": "^2.6.9",
     "default-browser": "^5.2.1",
     "default-browser-id": "^5.0.0",
@@ -230,7 +231,6 @@
     "ws": "^8.18.3",
     "wsl-utils": "^0.1.0"
   },
-  "devDependencies": {},
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "dev": "webpack serve --config webpack.dev.js",
