@@ -46,4 +46,12 @@ export class Project {
   getUpcommingTasks() {
     return this.tasks.filter((x) => isThisWeek(x.dueDate));
   }
+
+  getCompletedTasks() {
+    return this.tasks.filter((x) => x.isDone);
+  }
+
+  getInCompletedTasks() {
+    return this.tasks.filter((x) => !x.isDone);
+  }
 }
