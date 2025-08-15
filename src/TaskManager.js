@@ -3,34 +3,32 @@ import { Task } from "./Task";
 import { Project } from "./Project";
 
 export class TaskManager {
-  constructor() {
-    this.projects = [];
-  }
+  static projects = [];
 
-  loadProjects(filename) {
+  static loadProjects(filename) {
     // load projects saved in local storage
     let projs = localStorage.getItem("projects");
     if (projs == null) {
       return false;
     } else {
-      this.projects = JSON.parse(projs);
+      TaskManager.projects = JSON.parse(projs);
       return true;
     }
   }
 
-  saveProjects() {
+  static saveProjects() {
     // save projects in local storage
     if (this.projects.length == 0) {
       return false;
     } else {
-      localStorage.setItem("projects", JSON.stringify(this.projects));
+      localStorage.setItem("projects", JSON.stringify(TaskManager.projects));
       return true;
     }
   }
 
-  getTodayTasks() {
+  static getTodayTasks() {
     let projs = [];
-    this.projects.forEach((x) => {
+    TaskManager.projects.forEach((x) => {
       let tasks = x.getTodayTasks();
       if (tasks.length > 0) {
         let pro = new Project(x.name);
@@ -41,9 +39,9 @@ export class TaskManager {
     return projs;
   }
 
-  getCompletedTasks() {
+  static getCompletedTasks() {
     let projs = [];
-    this.projects.forEach((x) => {
+    TaskManager.projects.forEach((x) => {
       let tasks = x.getCompletedTasks();
       if (tasks.length > 0) {
         let pro = new Project(x.name);
@@ -54,9 +52,9 @@ export class TaskManager {
     return projs;
   }
 
-  getInCompletedTasks() {
+  static getInCompletedTasks() {
     let projs = [];
-    this.projects.forEach((x) => {
+    TaskManager.projects.forEach((x) => {
       let tasks = x.getInCompletedTasks();
       if (tasks.length > 0) {
         let pro = new Project(x.name);
@@ -65,5 +63,45 @@ export class TaskManager {
       }
     });
     return projs;
+  }
+
+  static getProjectByName(name) {
+    return TaskManager.projects.find((x) => x.name === name);
+  }
+
+  static addProject(name) {
+    let pro = TaskManager.getProjectByName(name);
+    if (pro == undefined) {
+      pro = new Project(name);
+      TaskManager.projects.push(pro);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static removeProject(name) {
+    let pro = TaskManager.getProjectByName(name);
+    if (pro == undefined) {
+      return false;
+    } else {
+      TaskManager.projects.splice(TaskManager.projects.indexOf(pro), 1);
+      return true;
+    }
+  }
+
+  static editProject(name, newName) {
+    let pro = TaskManager.getProjectByName(name);
+    let proWithNewName = TaskManager.getProjectByName(newName);
+    if (pro == undefined) {
+      return false;
+    } else {
+      if (proWithNewName != undefined) {
+        return false;
+      } else {
+        pro.editName(newName);
+        return true;
+      }
+    }
   }
 }

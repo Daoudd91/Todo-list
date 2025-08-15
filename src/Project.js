@@ -54,4 +54,8 @@ export class Project {
   getInCompletedTasks() {
     return this.tasks.filter((x) => !x.isDone);
   }
+
+  getTaskById(id) {
+    return this.tasks.find((x) => x.id === id);
+  }
 }
