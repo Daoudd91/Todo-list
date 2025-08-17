@@ -3,32 +3,36 @@ import { Task } from "./Task";
 import { Project } from "./Project";
 
 export class TaskManager {
-  static projects = [];
+  static #projects = [];
 
-  static loadProjects(filename) {
+  static getProjects() {
+    return TaskManager.#projects;
+  }
+
+  static loadProjects() {
     // load projects saved in local storage
     let projs = localStorage.getItem("projects");
     if (projs == null) {
       return false;
     } else {
-      TaskManager.projects = JSON.parse(projs);
+      TaskManager.#projects = JSON.parse(projs);
       return true;
     }
   }
 
   static saveProjects() {
     // save projects in local storage
-    if (this.projects.length == 0) {
+    if (TaskManager.#projects.length == 0) {
       return false;
     } else {
-      localStorage.setItem("projects", JSON.stringify(TaskManager.projects));
+      localStorage.setItem("projects", JSON.stringify(TaskManager.#projects));
       return true;
     }
   }
 
   static getTodayTasks() {
     let projs = [];
-    TaskManager.projects.forEach((x) => {
+    TaskManager.#projects.forEach((x) => {
       let tasks = x.getTodayTasks();
       if (tasks.length > 0) {
         let pro = new Project(x.name);
@@ -41,7 +45,7 @@ export class TaskManager {
 
   static getCompletedTasks() {
     let projs = [];
-    TaskManager.projects.forEach((x) => {
+    TaskManager.#projects.forEach((x) => {
       let tasks = x.getCompletedTasks();
       if (tasks.length > 0) {
         let pro = new Project(x.name);
@@ -54,7 +58,7 @@ export class TaskManager {
 
   static getInCompletedTasks() {
     let projs = [];
-    TaskManager.projects.forEach((x) => {
+    TaskManager.#projects.forEach((x) => {
       let tasks = x.getInCompletedTasks();
       if (tasks.length > 0) {
         let pro = new Project(x.name);
@@ -66,14 +70,14 @@ export class TaskManager {
   }
 
   static getProjectByName(name) {
-    return TaskManager.projects.find((x) => x.name === name);
+    return TaskManager.#projects.find((x) => x.name === name);
   }
 
   static addProject(name) {
     let pro = TaskManager.getProjectByName(name);
     if (pro == undefined) {
       pro = new Project(name);
-      TaskManager.projects.push(pro);
+      TaskManager.#projects.push(pro);
       return true;
     } else {
       return false;
@@ -85,7 +89,7 @@ export class TaskManager {
     if (pro == undefined) {
       return false;
     } else {
-      TaskManager.projects.splice(TaskManager.projects.indexOf(pro), 1);
+      TaskManager.#projects.splice(TaskManager.projects.indexOf(pro), 1);
       return true;
     }
   }

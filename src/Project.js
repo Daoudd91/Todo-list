@@ -8,6 +8,7 @@ export class Project {
 
   addTask(task) {
     this.tasks.push(task);
+    this.tasks.sort((a, b) => a.dueDate - b.dueDate);
     return true;
   }
 

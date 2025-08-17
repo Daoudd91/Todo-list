@@ -1,7 +1,6 @@
 import { Task } from "./Task";
 import { Project } from "./Project";
 import { TaskManager } from "./TaskManager";
-import { data } from "browserslist";
 
 export class Modal {
   static showTaskModal(project, task) {
@@ -163,11 +162,13 @@ export class Modal {
 
     let modalContent = document.createElement("div");
     modalContent.classList = "modal-content";
+    modalContent.style.height = "250px";
     modal.appendChild(modalContent);
 
     let span = document.createElement("span");
     span.classList = "close";
     span.innerHTML = "&times;";
+    span.addEventListener("click", () => Modal.closeModal());
     modalContent.appendChild(span);
 
     let title = document.createElement("h1");
@@ -177,6 +178,13 @@ export class Modal {
 
     let form = document.createElement("form");
     form.id = "taskForm";
+    form.addEventListener("submit", () =>
+      Modal.#submitForm(
+        project == undefined ? "newProject" : "editProject",
+        form,
+        project
+      )
+    );
     modalContent.appendChild(form);
 
     let fieldset = document.createElement("fieldset");
@@ -200,6 +208,9 @@ export class Modal {
     butt = document.createElement("button");
     butt.classList = "modal-button cancel";
     butt.innerHTML = "Cancel";
+    butt.addEventListener("click", () => {
+      Modal.closeModal();
+    });
     fieldset.appendChild(butt);
 
     modal.style.animation = "appear 1s";
@@ -270,6 +281,87 @@ export class Modal {
         }
         break;
       }
+
+      case "newProject": {
+        let projName = data.get("name");
+        if (TaskManager.addProject(projName)) {
+          Modal.closeModal();
+          Modal.showAlertMessage(
+            true,
+            "Project " + projName + " was added successfully"
+          );
+        } else {
+          Modal.closeModal();
+          Modal.showAlertMessage(false, "failed to add project " + projName);
+        }
+        break;
+      }
+
+      case "editProject": {
+        let projName = data.get("name");
+        if (TaskManager.editProject(project.name, projName)) {
+          Modal.closeModal();
+          Modal.showAlertMessage(true, "project name was updated successfully");
+        } else {
+          Modal.closeModal();
+          Modal.showAlertMessage(false, "failed to update project name");
+        }
+        break;
+      }
     }
+  }
+
+  static showConfirmModal(project, task) {
+    let modal = document.createElement("div");
+    modal.classList = "modal";
+    modal.id = "myModal";
+
+    let modalContent = document.createElement("div");
+    modalContent.classList = "modal-content";
+    modalContent.style.height = "200px";
+    modal.appendChild(modalContent);
+
+    let span = document.createElement("span");
+    span.classList = "close";
+    span.innerHTML = "&times;";
+    modalContent.appendChild(span);
+    let title = document.createElement("h1");
+    title.classList = "modal-title";
+    title.innerHTML =
+      task != undefined
+        ? `Are you sure you want to delete task ${task.name} ?`
+        : `Are you sure you want to delete project ${project.name} ?`;
+
+    modalContent.appendChild(title);
+
+    let yesBtn = document.createElement("button");
+    yesBtn.classList = "modal-button";
+    yesBtn.innerHTML = "OK";
+    modalContent.appendChild(yesBtn);
+
+    let noBtn = document.createElement("button");
+    noBtn.classList = "modal-button";
+    noBtn.innerHTML = "Cancel";
+    modalContent.appendChild(noBtn);
+
+    yesBtn.addEventListener("click", () => {
+      Modal.closeModal();
+      if (task == undefined) {
+        if (TaskManager.removeProject(project.name)) {
+          Modal.showAlertMessage(true, "Project deleted successfully");
+        } else {
+          Modal.showAlertMessage(false, "Failed to delete project");
+        }
+      } else {
+        if (project.removeTask(task.id)) {
+          Modal.showAlertMessage(true, "Task deleted successfully");
+        } else {
+          Modal.showAlertMessage(false, "Failed to delete task");
+        }
+      }
+    });
+    noBtn.addEventListener("click", () => {
+      Modal.closeModal();
+    });
   }
 }

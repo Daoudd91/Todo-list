@@ -5,5 +5,11 @@ import { Project } from "./Project";
 import { format, compareAsc } from "date-fns";
 import "./styles.css";
 import { Modal } from "./Modal";
+import { DOMOrganizer } from "./DOMOrganizer";
+import { TaskManager } from "./TaskManager";
 
-Modal.showAlertMessage(false, "this is a fail message");
+TaskManager.addProject("Daoud");
+TaskManager.addProject("rere");
+TaskManager.addProject("fofo");
+
+DOMOrganizer.renderLeftSideBar();

@@ -9,11 +9,9 @@
 
 @keyframes vanish {
   0% {
-    display: block;
     opacity: 1;
   }
   100% {
-    display: none;
     opacity: 0;
   }
 }
@@ -70,6 +68,82 @@ header:hover img {
   grid-column: 1 / 2;
   grid-row: 2 / 3;
   overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+#sidebar .row {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  transition: all 0.2s ease;
+  padding: 15px;
+  gap: 15px;
+  min-height: 30px;
+}
+
+#sidebar .row.title {
+  justify-content: space-between;
+}
+
+.activateable:hover {
+  cursor: pointer;
+  background-color: gray;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+  padding-left: 10px;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.active {
+  cursor: pointer;
+  background-color: gray;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+  padding-left: 30px;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.activateable:hover img {
+  filter: invert(100%);
+  transition: all 0.2s ease;
+}
+
+.active img {
+  filter: invert(100%);
+  transition: all 0.2s ease;
+}
+
+.today-upcoming-icon {
+  height: 35px;
+  width: 35px;
+  transition: all 0.2s ease;
+}
+
+.clickable-icon {
+  display: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+*:hover > .clickable-icon {
+  display: block;
+}
+
+.project-item {
+  display: grid;
+  grid-template-columns: 25px 1fr 25px 25px;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  padding-left: 30px;
+  gap: 10px;
 }
 
 footer {
@@ -271,7 +345,7 @@ fieldset.singleRow {
   left: 20px;
   top: calc(100vh - 100px);
   z-index: 0;
-  height: 50px;
+  height: 40px;
   padding: 20px;
   width: max-content;
   font-size: 30px;
