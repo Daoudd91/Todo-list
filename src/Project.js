@@ -44,7 +44,7 @@ export class Project {
     return this.tasks.filter((x) => isToday(x.dueDate));
   }
 
-  getUpcommingTasks() {
+  getUpcomingTasks() {
     return this.tasks.filter((x) => isThisWeek(x.dueDate));
   }
 

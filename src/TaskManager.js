@@ -43,6 +43,19 @@ export class TaskManager {
     return projs;
   }
 
+  static getUpcomingTasks() {
+    let projs = [];
+    TaskManager.#projects.forEach((x) => {
+      let tasks = x.getUpcomingTasks();
+      if (tasks.length > 0) {
+        let pro = new Project(x.name);
+        pro.tasks = tasks;
+        projs.push(pro);
+      }
+    });
+    return projs;
+  }
+
   static getCompletedTasks() {
     let projs = [];
     TaskManager.#projects.forEach((x) => {
@@ -89,7 +102,7 @@ export class TaskManager {
     if (pro == undefined) {
       return false;
     } else {
-      TaskManager.#projects.splice(TaskManager.projects.indexOf(pro), 1);
+      TaskManager.#projects.splice(TaskManager.#projects.indexOf(pro), 1);
       return true;
     }
   }

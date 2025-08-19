@@ -9,6 +9,15 @@ import { DOMOrganizer } from "./DOMOrganizer";
 import { TaskManager } from "./TaskManager";
 
 TaskManager.addProject("Daoud");
+TaskManager.getProjectByName("Daoud").addTask(
+  new Task(
+    "daoud task 1",
+    "daoud description 1",
+    Priority.High,
+    new Date(),
+    false
+  )
+);
 TaskManager.addProject("rere");
 TaskManager.addProject("fofo");
 

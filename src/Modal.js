@@ -1,6 +1,7 @@
 import { Task } from "./Task";
 import { Project } from "./Project";
 import { TaskManager } from "./TaskManager";
+import { DOMOrganizer } from "./DOMOrganizer";
 
 export class Modal {
   static showTaskModal(project, task) {
@@ -127,22 +128,23 @@ export class Modal {
     input.id = "dueDate";
     fieldset.appendChild(input);
 
-    let butt = document.createElement("button");
-    butt.type = "submit";
-    butt.classList = "modal-button";
-    butt.innerHTML = "OK";
-    fieldset.appendChild(butt);
+    let okButt = document.createElement("button");
+    okButt.classList = "modal-button";
+    okButt.innerHTML = "OK";
+    okButt.type = "button";
+    fieldset.appendChild(okButt);
 
-    butt = document.createElement("button");
-    butt.classList = "modal-button cancel";
-    butt.innerHTML = "Cancel";
-    fieldset.appendChild(butt);
+    let cancelButt = document.createElement("button");
+    cancelButt.classList = "modal-button cancel";
+    cancelButt.innerHTML = "Cancel";
+    cancelButt.type = "button";
+    fieldset.appendChild(cancelButt);
 
     modal.style.animation = "appear 1s";
     document.body.appendChild(modal);
 
     // add event listeners
-    form.addEventListener("submit", (event) => {
+    okButt.addEventListener("click", (event) => {
       Modal.#submitForm(
         task == undefined ? "newTask" : "editTask",
         form,
@@ -151,7 +153,7 @@ export class Modal {
       );
     });
 
-    butt.addEventListener("click", () => Modal.closeModal());
+    cancelButt.addEventListener("click", () => Modal.closeModal());
     span.addEventListener("click", () => Modal.closeModal());
   }
 
@@ -178,13 +180,6 @@ export class Modal {
 
     let form = document.createElement("form");
     form.id = "taskForm";
-    form.addEventListener("submit", () =>
-      Modal.#submitForm(
-        project == undefined ? "newProject" : "editProject",
-        form,
-        project
-      )
-    );
     modalContent.appendChild(form);
 
     let fieldset = document.createElement("fieldset");
@@ -199,19 +194,27 @@ export class Modal {
     input.classList = "singleRow";
     fieldset.appendChild(input);
 
-    let butt = document.createElement("button");
-    butt.type = "submit";
-    butt.classList = "modal-button";
-    butt.innerHTML = "OK";
-    fieldset.appendChild(butt);
+    let okButt = document.createElement("button");
+    okButt.classList = "modal-button";
+    okButt.innerHTML = "OK";
+    okButt.type = "button";
+    okButt.addEventListener("click", () =>
+      Modal.#submitForm(
+        project == undefined ? "newProject" : "editProject",
+        form,
+        project
+      )
+    );
+    fieldset.appendChild(okButt);
 
-    butt = document.createElement("button");
-    butt.classList = "modal-button cancel";
-    butt.innerHTML = "Cancel";
-    butt.addEventListener("click", () => {
+    let cancelButt = document.createElement("button");
+    cancelButt.classList = "modal-button cancel";
+    cancelButt.innerHTML = "Cancel";
+    cancelButt.type = "button";
+    cancelButt.addEventListener("click", () => {
       Modal.closeModal();
     });
-    fieldset.appendChild(butt);
+    fieldset.appendChild(cancelButt);
 
     modal.style.animation = "appear 1s";
     document.body.appendChild(modal);
@@ -249,11 +252,12 @@ export class Modal {
           data.get("dueDate"),
           false
         );
-        if (project.addTask(task)) {
-          Modal.closeTaskModal();
+        if (project.addTask(newTask)) {
+          Modal.closeModal();
           Modal.showAlertMessage(true, "Task was added successfully");
+          DOMOrganizer.renderContent();
         } else {
-          Modal.closeTaskModal();
+          Modal.closeModal();
           showFailureMessage(false, "Failed to add task");
         }
         break;
@@ -275,6 +279,7 @@ export class Modal {
         ) {
           Modal.closeModal();
           Modal.showAlertMessage(true, "Task was updated successfully");
+          DOMOrganizer.renderContent();
         } else {
           Modal.closeModal();
           showAlertMessage(false, "Failed to update task");
@@ -290,6 +295,7 @@ export class Modal {
             true,
             "Project " + projName + " was added successfully"
           );
+          DOMOrganizer.refreshProjectsList();
         } else {
           Modal.closeModal();
           Modal.showAlertMessage(false, "failed to add project " + projName);
@@ -302,6 +308,7 @@ export class Modal {
         if (TaskManager.editProject(project.name, projName)) {
           Modal.closeModal();
           Modal.showAlertMessage(true, "project name was updated successfully");
+          DOMOrganizer.refreshProjectsList();
         } else {
           Modal.closeModal();
           Modal.showAlertMessage(false, "failed to update project name");
@@ -318,12 +325,13 @@ export class Modal {
 
     let modalContent = document.createElement("div");
     modalContent.classList = "modal-content";
-    modalContent.style.height = "200px";
+    modalContent.style.height = "160px";
     modal.appendChild(modalContent);
 
     let span = document.createElement("span");
     span.classList = "close";
     span.innerHTML = "&times;";
+    span.addEventListener("click", () => Modal.closeModal());
     modalContent.appendChild(span);
     let title = document.createElement("h1");
     title.classList = "modal-title";
@@ -340,7 +348,7 @@ export class Modal {
     modalContent.appendChild(yesBtn);
 
     let noBtn = document.createElement("button");
-    noBtn.classList = "modal-button";
+    noBtn.classList = "modal-button cancel";
     noBtn.innerHTML = "Cancel";
     modalContent.appendChild(noBtn);
 
@@ -349,6 +357,7 @@ export class Modal {
       if (task == undefined) {
         if (TaskManager.removeProject(project.name)) {
           Modal.showAlertMessage(true, "Project deleted successfully");
+          DOMOrganizer.refreshProjectsList();
         } else {
           Modal.showAlertMessage(false, "Failed to delete project");
         }
@@ -363,5 +372,7 @@ export class Modal {
     noBtn.addEventListener("click", () => {
       Modal.closeModal();
     });
+    modal.style.animation = "appear 1s";
+    document.body.appendChild(modal);
   }
 }
