@@ -2,6 +2,7 @@ import { Task } from "./Task";
 import { Project } from "./Project";
 import { TaskManager } from "./TaskManager";
 import { DOMOrganizer } from "./DOMOrganizer";
+import { format } from "date-fns";
 
 export class Modal {
   static showTaskModal(project, task) {
@@ -123,7 +124,7 @@ export class Modal {
 
     input = document.createElement("input");
     input.type = "date";
-    input.value = Date.now();
+    input.value = task != undefined ? format(task.dueDate, "yyyy-MM-dd") : "";
     input.name = "dueDate";
     input.id = "dueDate";
     fieldset.appendChild(input);
@@ -305,10 +306,12 @@ export class Modal {
 
       case "editProject": {
         let projName = data.get("name");
+        let name = project.name;
         if (TaskManager.editProject(project.name, projName)) {
           Modal.closeModal();
           Modal.showAlertMessage(true, "project name was updated successfully");
           DOMOrganizer.refreshProjectsList();
+          DOMOrganizer.updateActiveProject(projName);
         } else {
           Modal.closeModal();
           Modal.showAlertMessage(false, "failed to update project name");
@@ -337,7 +340,7 @@ export class Modal {
     title.classList = "modal-title";
     title.innerHTML =
       task != undefined
-        ? `Are you sure you want to delete task ${task.name} ?`
+        ? `Are you sure you want to delete task ${task.title} ?`
         : `Are you sure you want to delete project ${project.name} ?`;
 
     modalContent.appendChild(title);
@@ -356,14 +359,17 @@ export class Modal {
       Modal.closeModal();
       if (task == undefined) {
         if (TaskManager.removeProject(project.name)) {
+          let name = project.name;
           Modal.showAlertMessage(true, "Project deleted successfully");
           DOMOrganizer.refreshProjectsList();
+          DOMOrganizer.clearActiveProject(name);
         } else {
           Modal.showAlertMessage(false, "Failed to delete project");
         }
       } else {
         if (project.removeTask(task.id)) {
           Modal.showAlertMessage(true, "Task deleted successfully");
+          DOMOrganizer.renderContent();
         } else {
           Modal.showAlertMessage(false, "Failed to delete task");
         }

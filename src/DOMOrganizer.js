@@ -11,7 +11,23 @@ import { format } from "date-fns";
 export class DOMOrganizer {
   static #activeprojects = [];
 
-  static renderTask(parent, task) {
+  static clearActiveProject(name) {
+    let pro = DOMOrganizer.#activeprojects.find((x) => x.name === name);
+    if (pro != undefined) {
+      let index = DOMOrganizer.#activeprojects.indexOf(pro);
+      DOMOrganizer.#activeprojects.splice(index, 1);
+      DOMOrganizer.renderContent();
+    }
+  }
+
+  static updateActiveProject(name) {
+    let pro = DOMOrganizer.#activeprojects.find((x) => x.name === name);
+    if (pro != undefined) {
+      DOMOrganizer.renderContent();
+    }
+  }
+
+  static renderTask(parent, project, task) {
     let taskDiv = document.createElement("div");
     taskDiv.classList = "task";
 
@@ -32,11 +48,33 @@ export class DOMOrganizer {
 
     let priority = document.createElement("p");
     priority.innerHTML = task.priority;
+    priority.classList = task.priority;
     taskDiv.appendChild(priority);
 
     let isDone = document.createElement("div");
-    isDone.innerHTML = task.isDone ? "completed" : "not completed";
+    isDone.classList = "completed";
+    isDone.innerHTML = task.isDone ? "🗸" : "";
+    isDone.addEventListener("click", () => {
+      task.isDone = task.isDone ? false : true;
+      isDone.innerHTML = task.isDone ? "🗸" : "";
+    });
     taskDiv.appendChild(isDone);
+
+    let editbtn = document.createElement("img");
+    editbtn.src = editIcon;
+    editbtn.classList = "clickable-icon";
+    editbtn.addEventListener("click", () => {
+      Modal.showTaskModal(project, task);
+    });
+    taskDiv.appendChild(editbtn);
+
+    let deletebtn = document.createElement("img");
+    deletebtn.src = deleteIcon;
+    deletebtn.classList = "clickable-icon";
+    deletebtn.addEventListener("click", () =>
+      Modal.showConfirmModal(project, task)
+    );
+    taskDiv.appendChild(deletebtn);
 
     parent.appendChild(taskDiv);
   }
@@ -192,7 +230,7 @@ export class DOMOrganizer {
           // show add task row
         } else {
           project.tasks.forEach((task) => {
-            DOMOrganizer.renderTask(con, task);
+            DOMOrganizer.renderTask(con, project, task);
           });
         }
         DOMOrganizer.renderEmptyTask(con, project);

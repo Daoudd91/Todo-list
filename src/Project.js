@@ -32,6 +32,7 @@ export class Project {
       task.description = newDescription ? newDescription : task.description;
       task.dueDate = newDueDate ? newDueDate : task.dueDate;
       task.isDone = newIsDone ? newIsDone : task.isDone;
+      task.priority = newPriority ? newPriority : task.priority;
       return true;
     }
   }

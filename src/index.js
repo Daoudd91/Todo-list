@@ -13,7 +13,7 @@ TaskManager.getProjectByName("Daoud").addTask(
   new Task(
     "daoud task 1",
     "daoud description 1",
-    Priority.High,
+    Priority.Low,
     new Date(),
     false
   )
