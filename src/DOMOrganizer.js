@@ -57,6 +57,7 @@ export class DOMOrganizer {
     isDone.addEventListener("click", () => {
       task.isDone = task.isDone ? false : true;
       isDone.innerHTML = task.isDone ? "🗸" : "";
+      TaskManager.saveProjects();
     });
     taskDiv.appendChild(isDone);
 

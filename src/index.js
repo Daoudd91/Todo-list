@@ -8,17 +8,5 @@ import { Modal } from "./Modal";
 import { DOMOrganizer } from "./DOMOrganizer";
 import { TaskManager } from "./TaskManager";
 
-TaskManager.addProject("Daoud");
-TaskManager.getProjectByName("Daoud").addTask(
-  new Task(
-    "daoud task 1",
-    "daoud description 1",
-    Priority.Low,
-    new Date(),
-    false
-  )
-);
-TaskManager.addProject("rere");
-TaskManager.addProject("fofo");
-
+TaskManager.loadProjects();
 DOMOrganizer.renderLeftSideBar();

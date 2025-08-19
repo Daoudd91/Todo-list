@@ -26,7 +26,9 @@ export class Modal {
 
     let form = document.createElement("form");
     form.id = "taskForm";
-
+    form.onsubmit = function () {
+      return false;
+    };
     modalContent.appendChild(form);
 
     let fieldset = document.createElement("fieldset");
@@ -181,11 +183,13 @@ export class Modal {
 
     let form = document.createElement("form");
     form.id = "taskForm";
+    form.onsubmit = function () {
+      return false;
+    };
     modalContent.appendChild(form);
 
     let fieldset = document.createElement("fieldset");
     form.appendChild(fieldset);
-
     let input = document.createElement("input");
     input.id = "name";
     input.name = "name";
@@ -257,6 +261,7 @@ export class Modal {
           Modal.closeModal();
           Modal.showAlertMessage(true, "Task was added successfully");
           DOMOrganizer.renderContent();
+          TaskManager.saveProjects();
         } else {
           Modal.closeModal();
           showFailureMessage(false, "Failed to add task");
@@ -281,6 +286,7 @@ export class Modal {
           Modal.closeModal();
           Modal.showAlertMessage(true, "Task was updated successfully");
           DOMOrganizer.renderContent();
+          TaskManager.saveProjects();
         } else {
           Modal.closeModal();
           showAlertMessage(false, "Failed to update task");
@@ -297,6 +303,7 @@ export class Modal {
             "Project " + projName + " was added successfully"
           );
           DOMOrganizer.refreshProjectsList();
+          TaskManager.saveProjects();
         } else {
           Modal.closeModal();
           Modal.showAlertMessage(false, "failed to add project " + projName);
@@ -312,6 +319,7 @@ export class Modal {
           Modal.showAlertMessage(true, "project name was updated successfully");
           DOMOrganizer.refreshProjectsList();
           DOMOrganizer.updateActiveProject(projName);
+          TaskManager.saveProjects();
         } else {
           Modal.closeModal();
           Modal.showAlertMessage(false, "failed to update project name");
@@ -363,6 +371,7 @@ export class Modal {
           Modal.showAlertMessage(true, "Project deleted successfully");
           DOMOrganizer.refreshProjectsList();
           DOMOrganizer.clearActiveProject(name);
+          TaskManager.saveProjects();
         } else {
           Modal.showAlertMessage(false, "Failed to delete project");
         }
@@ -370,6 +379,7 @@ export class Modal {
         if (project.removeTask(task.id)) {
           Modal.showAlertMessage(true, "Task deleted successfully");
           DOMOrganizer.renderContent();
+          TaskManager.saveProjects();
         } else {
           Modal.showAlertMessage(false, "Failed to delete task");
         }

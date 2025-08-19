@@ -15,7 +15,22 @@ export class TaskManager {
     if (projs == null) {
       return false;
     } else {
-      TaskManager.#projects = JSON.parse(projs);
+      let projects = JSON.parse(projs);
+      TaskManager.#projects = [];
+      projects.forEach((item) => {
+        let pro = new Project(item.name);
+        item.tasks.forEach((task) => {
+          let t = new Task(
+            task.title,
+            task.description,
+            task.priority,
+            task.dueDate,
+            task.isDone
+          );
+          pro.addTask(t);
+        });
+        TaskManager.#projects.push(pro);
+      });
       return true;
     }
   }
@@ -23,7 +38,7 @@ export class TaskManager {
   static saveProjects() {
     // save projects in local storage
     if (TaskManager.#projects.length == 0) {
-      return false;
+      localStorage.clear();
     } else {
       localStorage.setItem("projects", JSON.stringify(TaskManager.#projects));
       return true;

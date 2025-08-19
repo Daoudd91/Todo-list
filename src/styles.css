@@ -189,6 +189,7 @@ footer {
 }
 
 .collapsible {
+  margin-top: 5px;
   background-color: #777;
   color: white;
   cursor: pointer;
